@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8"/>
+<title>Home</title>
+<style type="text/css" mce_bogus="1">
+
+body {
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+}
+canvas {
+  width: 130vw;
+  height: 130vh;
+  z-index: -1;
+
+}
+
+</style>
+</head>
+<body>
+<div style="position: absolute;
+left: 80px; 
+top: 80px;
+font-size: 60px;
+font-family: 'Microsoft YaHei';
+color:rgb(64, 161, 199);">Hello World!</div>
+<div style="position: absolute;
+right: 40px; 
+bottom: 80px;
+font-size: 30px;
+font-family: 'Microsoft YaHei';
+color:rgb(64, 161, 199);">XiaMen University<br />Computer Science</div>
+<canvas id="myCanvas" />
+
+</body>
+<script type="text/javascript">
+var canvas = document.getElementById('myCanvas');
+var context = canvas.getContext('2d');
+context.globalAlpha=0.5;
+//var winW = window.innerWidth;
+//var winH = window.innerHeight*5/4;
+var winW=document.documentElement.clientWidth
+var winH=document.documentElement.clientHeight
+canvas.width=winW;
+canvas.height=winH;
+var timerInterval = 10; // ms
+var cellWidth = 10;
+var cellXLen = canvas.width/cellWidth; 
+var cellYLen = canvas.height/cellWidth; 
+var cells = [];
+
+function drawCell(x,y,alive){
+    var cx = x * cellWidth;
+    var cy = y * cellWidth;
+    if(alive){
+        context.fillStyle = "skyBlue";
+        context.fillRect(cx, cy, cellWidth, cellWidth);
+    }else 
+        context.clearRect(cx, cy, cellWidth, cellWidth);
+}
+
+
+function rule(x,y){
+    var live = [];
+    var Count = 0;
+    var alive = cells[[x,y]];
+    var nextState = 0;
+    live[0] = cells[[(x-1+cellXLen)%cellXLen, (y-1+cellYLen)%cellYLen]];
+    live[1] = cells[[(x-1+cellXLen)%cellXLen, (y+1+cellYLen)%cellYLen]];
+    live[2] = cells[[(x+cellXLen)%cellXLen, (y+1+cellYLen)%cellYLen]];
+    live[3] = cells[[(x+cellXLen)%cellXLen, (y-1+cellYLen)%cellYLen]];
+    live[4] = cells[[(x+1+cellXLen)%cellXLen, (y+1+cellYLen)%cellYLen]];
+    live[5] = cells[[(x+1+cellXLen)%cellXLen, (y-1+cellYLen)%cellYLen]];
+    live[6] = cells[[(x+1+cellXLen)%cellXLen, (y+cellYLen)%cellYLen]];
+    live[7] = cells[[(x-1+cellXLen)%cellXLen, (y+cellYLen)%cellYLen]];
+    for(i=0;i<8;i++)
+        if(live[i])Count++;
+    if(Count==3){
+        return 1;
+    }else if(Count==2){
+        return alive;
+    }else return 0;
+}
+function loop(){
+    context.fillStyle="blue"
+    context.fillRect(0,0,10,200)
+    var nextgen = [];
+    //计算新状态
+    for(x=0;x<cellXLen;x++)
+        for(y=0;y<cellYLen;y++)                
+            nextgen[[x,y]] = rule(x,y);
+    //绘制新状态            
+    for(x=0;x<cellXLen;x++){
+        for(y=0;y<cellYLen;y++){
+            cells[[x,y]] = nextgen[[x,y]];
+            drawCell(x, y, cells[[x,y]]);
+        }
+    }
+    //每隔一定时间执行一次loop
+    setTimeout(loop, timerInterval);
+}
+function random(){
+    for(x=0;x<cellXLen;x++){
+        for(y=0;y<cellYLen;y++){
+            s = (Math.random()>=0.7) ? 1 : 0;
+            cells[[x,y]] = s;
+            drawCell(x,y,s);
+        }
+    }
+}
+
+random();
+loop();
+</script>
+
+<html>

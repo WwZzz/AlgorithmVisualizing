@@ -1,0 +1,29 @@
+TitleBar {
+    background-color: darkblue;
+    color: rgb(255,255,255);
+}
+#titleLabel{
+    color:lightgray;
+    font-family:Microsoft YaHei;
+}
+
+#buttonMinimum,#buttonMaximum,#buttonClose,#buttonHome{
+    border: none;
+    background-color: darkblue;
+    color: gray;
+}
+
+#buttonMinimum:hover,#buttonMaximum:hover,#buttonHome:hover{
+    background-color: darkblue;
+    color: white;
+}
+#buttonClose:hover {
+    color: white;
+}
+#buttonHome:pressed,#buttonMaximum:pressed,#buttonMinimum:pressed{
+    background-color: rgb(50,50,200);
+}
+#buttonClose:pressed {
+    color: white;
+    background-color: rgb(50,50,200);
+}

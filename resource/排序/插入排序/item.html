@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes" /> 
+		<title>插入排序</title>
+		<style type="text/css" mce_bogus="1">
+			table {
+                margin:auto;
+                font-family: 'YouYuan','Microsoft Yahei','SimSun';   
+                }
+                </style>
+	</head>
+	<body>
+		<table>
+			<tr align="center"><td colspan="2"><h3 style="color:rgb(84, 84, 175);font-size:23px;">插入排序</h3><hr height="1px"/></td></tr>
+			<tr>
+                <td align="left">数组大小: <span id="spanGen"></span>7</td>
+				<td align="right">
+                    <button id="btnStart" onclick="myStart();return true;">播放</button>
+                    <button id="btnPause" onclick="myPause();return true;" disabled="disabled">暂停</button>
+					<button id="btnReset" onclick="Reset();return true;" disabled="disabled">重置</button>
+					<button id="btnStep" onclick="myStep();return true;">步进</button>
+				</td>
+			</tr>
+			<tr align="center">
+				<td colspan="2"><canvas id="mycanvas" width="800" height="600" style="border: 1px solid white; background-color: #d9f0ff;" /></td>
+			</tr>
+		</table>
+    </body>
+    <script src="../../page/js/Node.js"></script>
+    <script src="../../page/js/Action.js"></script>
+    <script src="../../page/js/sortplot.js"></script>
+    <script type="text/javascript">
+        
+        //初始化canvas
+        var c=document.getElementById("mycanvas");
+        var ctx=c.getContext("2d");
+        //设置按钮响应函数，拓展流程控制函数
+        function myStep(){
+            AC.Step();
+            btnStart.disabled = false;
+			btnPause.disabled = true;
+			btnReset.disabled = false;
+            btnStep.disabled = false;
+        }
+        function myStart(){
+            if(AC.stepping)return;
+            btnStart.disabled = true;
+			btnPause.disabled = false;
+			btnReset.disabled = true;
+            btnStep.disabled = true;
+            AC.Start(ctx);
+        }
+        function myPause(){
+            btnStart.disabled = false;
+			btnPause.disabled = true;
+			btnReset.disabled = false;
+            btnStep.disabled = false;
+            AC.Pause();
+        }
+        //重写reset函数
+        function Reset(){
+            AC.Clear();
+            main();
+        }
+        function myupdate(){
+            if(this.para[1]==0){
+                var temp=this.nodelist[this.i+1];          
+                this.nodelist[this.i+1]=this.nodelist[this.i];
+                this.nodelist[this.i]=temp;
+            }
+        }
+        //main()生成动画
+        function main(){
+            //初始化要排序的数组
+            var list=[3,2,5,7,4,6,1];//排序数组
+            //为动作数组创造头结点
+            var ACHead=new AC(0,0,null,null,null,0);
+            AClist.push(ACHead);
+            //初始化nodelist数组
+            for(var k=0;k<list.length;k++){
+                var temp=list[k]+0;
+                nodelist.push(new NodeCircle(20,start+k*spointere,300,temp,"skyblue",true));
+            }
+            //插入排序
+            var a,j,x,y;
+            for(var i=1;i<list.length;i++){
+                var temp=list[i];
+                a=new ACmove(i,-1,nodelist,null,[0,100],framenum,myupdate);
+                AClist[AClist.length-1].setNext(a);
+                AClist.push(a);
+                j=i-1;
+                while(j>-1&&temp<list[j]){
+                    list[j+1]=list[j];
+                    a=new ACmove(j,-1,nodelist,null,[spointere,0],framenum,myupdate);
+                    AClist[AClist.length-1].setNext(a);
+                    AClist.push(a);
+                    j--;
+                }
+                list[j+1]=temp;
+                a=new ACmove(j+1,0,nodelist,null,[((j+1)*spointere-i*spointere),-100],framenum,myupdate);
+                AClist[AClist.length-1].setNext(a);
+                AClist.push(a);
+            }
+            DrawFrame(nodelist,ctx);
+        }
+        main();
+    </script>
+<html>

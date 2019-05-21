@@ -1,0 +1,66 @@
+<html>
+	<head>
+		<title>My first three.js app</title>
+		<style>
+			body { margin: 0; }
+			canvas { width: 100%; height: 100% }
+		</style>
+	</head>
+	<body>
+			<div style="position: absolute;
+			left:45%;
+			bottom:50%;
+			font-size: 30px;
+			font-family: 'Microsoft YaHei','YouYuan','SimSun';
+			color:rgb(241, 245, 247);">开发中...</div>
+		<script src="js/three.js"></script>
+		<script>
+			var scene = new THREE.Scene();
+			var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
+
+			var renderer = new THREE.WebGLRenderer({antialias: true});
+			renderer.setSize( window.innerWidth, window.innerHeight );
+			renderer.shadowMap.enabled = true;
+			renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+			document.body.appendChild( renderer.domElement );
+
+			var geometry = new THREE.BoxGeometry( 1, 1, 1 );
+			var material = new THREE.MeshBasicMaterial( { color: 0x3333ff } );
+			var cube = new THREE.Mesh( geometry, material );
+			scene.add( cube );
+
+			camera.position.z = 5;
+			let pointLight = new THREE.SpotLight(0xffffff, 0.2, 100, Math.PI / 3);
+			// 光源位置
+			pointLight.position.set(60, 30, 0);
+			// 开启阴影
+			pointLight.castShadow = true;
+			pointLight.distance = 100;
+			pointLight.intensity = 1;// 光源强度
+			// 光线衰减 默认 1
+			pointLight.decay = 2;
+			pointLight.penumbra = 1;
+			// 阴影有点模糊下设置
+			pointLight.shadow.mapSize.width = 1024;
+			pointLight.shadow.mapSize.height = 1024;
+			// pointLight.target = this.plane;//光照照向地面
+			let lighthelp = new THREE.SpotLightHelper(pointLight, 0x00FF00);
+			// 能看见光源位置
+			let shadowCameraHelper = new THREE.CameraHelper(pointLight.shadow.camera);
+			scene.add( shadowCameraHelper );
+			scene.add(lighthelp);
+			scene.add(pointLight);
+			var animate = function () {
+				requestAnimationFrame( animate );
+
+				cube.rotation.x += 0.01;
+				cube.rotation.y += 0.01;
+
+				renderer.render( scene, camera );
+			};
+
+			animate();
+		</script>
+
+	</body>
+</html>
